@@ -5,16 +5,24 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+
+    //Constant
+
+
 
   Button mTrueButton;
   Button mFalseButton;
   TextView mQuestionTextView;
   int mIndex;
    int mQuestion;
+   int mScore;
+   TextView mScoreTextView;
+   ProgressBar mProgressBar;
 
 
   private TrueFalse[] mQuestionBank = new TrueFalse[]{
@@ -38,6 +46,9 @@ public class MainActivity extends Activity {
 
   };
 
+
+    final int PROGRESS_BAR_INCREMENT = (int) Math.ceil( 100.0 / mQuestionBank.length);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +57,8 @@ public class MainActivity extends Activity {
      mTrueButton = findViewById(R.id.true_button);
      mFalseButton = findViewById(R.id.false_button);
      mQuestionTextView = findViewById(R.id.question_text_view);
+     mScoreTextView = findViewById(R.id.score);
+     mProgressBar = findViewById(R.id.progress_bar);
 
         mQuestion = mQuestionBank[mIndex].getQuestionID();
         mQuestionTextView.setText(mQuestion);
@@ -73,6 +86,8 @@ public class MainActivity extends Activity {
         mIndex = (mIndex + 1) % mQuestionBank.length;
         mQuestion = mQuestionBank[mIndex].getQuestionID();
         mQuestionTextView.setText(mQuestion);
+        mProgressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
+        mScoreTextView.setText("Score " + mScore + "/" + mQuestionBank.length);
     }
 
 
@@ -81,6 +96,7 @@ public class MainActivity extends Activity {
         
         if (userSelection == correctAnswer){
             Toast.makeText(getApplicationContext(),R.string.correct_toast, Toast.LENGTH_SHORT).show();
+            mScore = mScore + 1;
         }else {
             Toast.makeText(getApplicationContext(),R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
         }
